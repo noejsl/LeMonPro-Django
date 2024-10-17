@@ -7,6 +7,7 @@ from django.db.models import F
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
+from .forms import QuestionForm, ChoiceForm
 
 #def index(request):
 #    return HttpResponse("Hello, world. You're at the polls index.")
@@ -44,6 +45,32 @@ def vote(request, question_id):
         selected_choice.votes = F("votes") + 1
         selected_choice.save()
         return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+    
+def question_form(request):
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'polls/success.html')
+    else:
+        form = QuestionForm()
+    
+    return render(request, 'polls/question_form.html', {'form': form})
+
+def add_choice(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+
+    if request.method == 'POST':
+        form = ChoiceForm(request.POST)
+        if form.is_valid():
+            choice = form.save(commit=False)
+            choice.question = question  
+            choice.save()
+            return render(request, 'polls/success_choice.html', {'question': question, 'choice': choice})
+    else:
+        form = ChoiceForm()
+
+    return render(request, 'polls/add_choice.html', {'form': form, 'question': question})
 
 
 
@@ -53,7 +80,7 @@ class IndexView(generic.ListView):
 
     def get_queryset(self):
         """Return the last five published questions."""
-        return Question.objects.order_by("-pub_date")[:5]
+        return Question.objects.order_by("-pub_date")
 
 
 class DetailView(generic.DetailView):

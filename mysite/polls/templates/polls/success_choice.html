@@ -1,0 +1,10 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+<div class="container">
+    <h1>Choice "{{ choice.choice_text }}" Added to Question "{{ question.question_text }}"!</h1>
+
+    <a href="{% url 'polls:detail' question.id %}"><button type="button">Back to Question Details</button></a>
+    <a href="{% url 'polls:add_choice' question.id %}"><button type="button">Add Another Choice</button></a>
+    <a href="{% url 'polls:index' %}"><button type="button">Go to Polls Home</button></a>
+</div>

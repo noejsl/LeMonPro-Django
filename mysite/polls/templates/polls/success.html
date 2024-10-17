@@ -1,0 +1,14 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+<div class="container">
+    <h1>Question Added: {{ question_text }}!</h1>
+
+    <a href="{% url 'polls:index' %}">
+        <button type="button">Go to Polls</button>
+    </a>
+
+    <a href="{% url 'polls:question' %}">
+        <button type="button">Add Another Question</button>
+    </a>
+</div>
